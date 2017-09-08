@@ -32,7 +32,7 @@ class CourseComments(models.Model):
 
 class UserFavorite(models.Model):
     user = models.ForeignKey(UserProfile, verbose_name='用户')
-    fav_id = models.IntegerField(default=0, verbose_name='数据ID')
+    fav_id = models.IntegerField(default=0, verbose_name='数据ID')#即收藏的课程/教师/机构的id
     fav_type = models.IntegerField(choices=((1,'课程'),(2,'机构'),(3,'讲师')), verbose_name='收藏类型', default=1)
 
     class Meta:

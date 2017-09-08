@@ -91,7 +91,6 @@ class OrgHomeView(View):
         })
 
 
-
 class OrgCourseView(View):
     def get(self, request, org_id):
         current_page = "course"
