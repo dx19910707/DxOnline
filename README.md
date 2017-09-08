@@ -1,1 +1,2 @@
 # DxOnline
+根据慕课网Bobby老师课程《强力Django+杀手级Xadmin打造上线标准的在线教育平台》学习制作
