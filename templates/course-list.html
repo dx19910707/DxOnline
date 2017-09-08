@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block title %}公开课列表 - 杜学在线网{% endblock %}
+{% block course_active %}
+    <li class="active">
+        <a href="{% url 'course:course-list' %}">
+            公开课<img class="hot" src="{% static 'images/nav_hot.png' %}">
+        </a>
+    </li>
+{% endblock %}
 {% block custom_bread %}
     <section>
         <div class="wp">

@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block title %}课程机构列表 - 杜学在线网{% endblock %}
+{% block org_active %}
+    <li class="active"><a href="{% url 'org:org-list' %}">授课机构</a></li>
+{% endblock %}
 {% block custom_bread %}
     <section>
         <div class="wp">
