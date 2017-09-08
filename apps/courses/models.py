@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.db import models
 
-from organization.models import CourseOrg
+from organization.models import CourseOrg, Teacher
 
 # Create your models here.
 
@@ -10,6 +10,7 @@ from organization.models import CourseOrg
 class Course(models.Model):
     course_org = models.ForeignKey(CourseOrg, verbose_name='机构名称',null=True, blank=True)
     name = models.CharField(max_length=50, verbose_name='课程名称')
+    teacher = models.ForeignKey(Teacher, verbose_name='授课讲师', null=True, blank=True)
     desc = models.CharField(max_length=300, verbose_name='课程描述')
     detail = models.TextField(verbose_name='课程详情')
     degree = models.CharField(verbose_name='难度', choices=(('cj','初级'),('zj','中级'),('gj','高级')), max_length=2)
@@ -20,6 +21,8 @@ class Course(models.Model):
     click_nums = models.IntegerField(default=0, verbose_name='点击人数')
     category = models.CharField(max_length=30, verbose_name='课程类别',default='后端开发')
     tag = models.CharField(default='', verbose_name='课程标签', max_length=10)
+    you_need_know = models.CharField(default='', verbose_name='课程须知', max_length=300)
+    teacher_tell = models.CharField(default='', verbose_name='老师说', max_length=300)
     add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
 
     class Meta:
@@ -37,6 +40,10 @@ class Course(models.Model):
         #获取学习本门课程的用户
         return self.usercourse_set.all()[:5]
 
+    def get_course_lesson(self):
+        #获取课程所有章节
+        return self.lesson_set.all()
+
 class Lesson(models.Model):
     course = models.ForeignKey(Course, verbose_name='课程')
     name = models.CharField(max_length=100, verbose_name='章节名称')
@@ -49,10 +56,16 @@ class Lesson(models.Model):
     def __str__(self):
         return self.name
 
+    def get_lesson_videos(self):
+        #获取该章节下的所有视频
+        return self.video_set.all()
+
 
 class Video(models.Model):
     lesson = models.ForeignKey(Lesson, verbose_name='章节')
     name = models.CharField(max_length=100, verbose_name='视频名称')
+    url = models.CharField(max_length=200, verbose_name='访问地址', default='')
+    learn_times = models.IntegerField(default=0, verbose_name='学习时长(分钟)')
     add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
 
     class Meta:
