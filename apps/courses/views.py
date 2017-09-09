@@ -8,6 +8,7 @@ from django.db.models import Q
 
 from operation.models import UserFavorite, CourseComments, UserCourse
 from .models import Course, CourseResource
+from utils.mixin_utils import LoginRequiredMixin
 
 # Create your views here.
 
@@ -76,21 +77,36 @@ class CourseDetailView(View):
         })
 
 
-class CourseVideoView(View):
+class CourseVideoView(LoginRequiredMixin, View):
     '''
     课程章节信息
     '''
     def get(self, request, course_id):
         course = Course.objects.get(id=int(course_id))
+        #查询用户是否已经关联/学习了该课程
+        user_courses = UserCourse.objects.filter(user=request.user, course=course)
+        if not user_courses:
+            user_course = UserCourse(user=request.user,course=course)
+            user_course.save()
+
+        #获取学习了该门课程的所有用户的ID
+        user_courses = UserCourse.objects.filter(course=course)
+        user_ids = [user_course.user.id for user_course in user_courses]
+        #获取这些用户还学习了哪些课程
+        all_user_courses = UserCourse.objects.filter(user_id__in=user_ids)
+        #获取这些课程的ID
+        course_ids = [user_course.course.id for user_course in all_user_courses]
+        #获取这些课程中点击量最高的5个
+        relate_courses = Course.objects.filter(id__in=course_ids).order_by('-click_nums')[:5]
         all_resources = CourseResource.objects.filter(course=course)
-        # all_usecourses = UserCourse.objects.filter(user=)
         return render(request, 'course-video.html',{
             'course':course,
             'all_resources': all_resources,
+            'relate_courses': relate_courses,
         })
 
 
-class CourseCommentView(View):
+class CourseCommentView(LoginRequiredMixin, View):
     def get(self, request, course_id):
         course = Course.objects.get(id=int(course_id))
         all_resources = CourseResource.objects.filter(course=course)
