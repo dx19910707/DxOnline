@@ -1,9 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block title %}课程讲师 - 杜学在线网{% endblock %}
-{% block teacher_active %}
-    <li class="active"><a href="{% url 'org:org-list' %}">授课教师</a></li>
-{% endblock %}
 {% block custom_bread %}
     <section>
         <div class="wp">
@@ -88,13 +85,13 @@
             {% for hot_teacher in sorted_teachers %}
             <dl class="des">
                 <span class="num fl">1</span>
-                <a href="{% url 'org:teacher_detail' teacher.id %}">
+                <a href="{% url 'org:teacher_detail' hot_teacher.id %}">
                     <dt>
                         <img width="50" height="50" class="scrollLoading"  src="{{ MEDIA_URL }}{{ hot_teacher.image }}"/>
                     </dt>
                 </a>
                 <dd>
-                    <a href="{% url 'org:teacher_detail' teacher.id %}">
+                    <a href="{% url 'org:teacher_detail' hot_teacher.id %}">
                         <h1 title="{{ hot_teacher.name }}">{{ hot_teacher.name }}</h1>
                     </a>
                     <p>工作年限：<span>{{ hot_teacher.work_years}}年</span></p>

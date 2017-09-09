@@ -83,21 +83,23 @@
 				<div class="nav">
 					<div class="wp">
 						<ul>
-							<li ><a href="{% url 'index' %}">首页</a></li>
+							<li {% if request.path == '/' %}class="active"{% endif %}>
+                                <a href="{% url 'index' %}">首页</a></li>
 							{% block course_active %}
-                            <li >
+                            <li {% if request.path|slice:'7' == '/course' %}class="active"{% endif %}>
 								<a href="{% url 'course:course-list' %}">
 									公开课<img class="hot" src="{% static 'images/nav_hot.png' %}">
 								</a>
 							</li>
                             {% endblock %}
-                            {% block teacher_active %}
-							<li >
+
+							<li {% if request.path|slice:'12' == '/org/teacher' %}class="active"{% endif %}>
 								<a href="{% url 'org:teacher_list' %}">授课教师</a>
 							</li>
-                            {% endblock %}
+
                             {% block org_active %}
-							<li><a href="{% url 'org:org-list' %}">授课机构</a></li>
+							<li {% if request.path|slice:'9' == '/org/list' %}class="active"{% endif %}>
+                                <a href="{% url 'org:org-list' %}">授课机构</a></li>
                             {% endblock %}
 						</ul>
 					</div>
