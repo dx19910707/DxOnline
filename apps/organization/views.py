@@ -5,6 +5,7 @@ from django.views.generic.base import View
 from django.shortcuts import render_to_response
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
+from django.db.models import Q
 
 from .models import CityDict,CourseOrg, Teacher
 from .forms import UserAskForm
@@ -24,6 +25,12 @@ class OrgListView(View):
         city_id = request.GET.get('city','')
         if city_id:
             all_orgs = all_orgs.filter(city_id=int(city_id))
+
+        search_keywords = request.GET.get('keywords', '')
+        if search_keywords:
+            all_orgs = all_orgs.filter(Q(name__icontains=search_keywords) |
+                                             Q(desc__icontains=search_keywords)
+                                       )
 
         #机构类别筛选
         category =request.GET.get('ct','')
@@ -172,13 +179,20 @@ class TeacherListView(View):
     def get(self, request):
         all_teachers = Teacher.objects.all()
 
+        search_keywords = request.GET.get('keywords', '')
+        if search_keywords:
+            all_teachers = all_teachers.filter(Q(name__icontains=search_keywords) |
+                                               Q(work_company__icontains=search_keywords)|
+                                               Q(work_position__icontains=search_keywords)
+                                       )
+
         sort = request.GET.get('sort', '')
         if sort:
             if sort == 'hot':
                 all_teachers = all_teachers.order_by('-click_nums')
 
         sorted_teachers = Teacher.objects.all().order_by('-click_nums')[:3]
-
+        teacher_nums = all_teachers.count()
         #对讲师进行分页
         try:
             page = request.GET.get('page', 1)
@@ -191,6 +205,7 @@ class TeacherListView(View):
             'all_teachers':teachers,
             'sorted_teachers': sorted_teachers,
             'sort': sort,
+            'teacher_nums': teacher_nums,
         })
 
 

@@ -20,9 +20,6 @@ class CustomBackend(ModelBackend):
             return None
 
 
-# Create your views here.
-
-
 class LoginView(View):
     def get(self, request):
         return render(request, 'login.html', {'msg': '用户名或密码错误!'})
