@@ -93,7 +93,7 @@
                             {% endblock %}
                             {% block teacher_active %}
 							<li >
-								<a href="teachers-list.html">授课教师</a>
+								<a href="{% url 'org:teacher_list' %}">授课教师</a>
 							</li>
                             {% endblock %}
                             {% block org_active %}

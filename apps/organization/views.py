@@ -192,3 +192,26 @@ class TeacherListView(View):
             'sorted_teachers': sorted_teachers,
             'sort': sort,
         })
+
+
+class TeacherDetailView(View):
+    def get(self, request, teacher_id):
+        teacher = Teacher.objects.get(id=int(teacher_id))
+        all_courses = teacher.course_set.all().order_by('click_nums') #or all_courses = Course.objects.filter(teacher=teacher)
+        #讲师排行榜
+        all_teachers = Teacher.objects.all().order_by('-click_nums')[:3]
+
+        has_fav_org = False
+        has_fav_teacher = False
+        if request.user.is_authenticated():
+            if UserFavorite.objects.filter(user=request.user, fav_id=teacher.org.id, fav_type=2):
+                has_fav_org = True
+            if UserFavorite.objects.filter(user=request.user, fav_id=teacher.id, fav_type=3):
+                has_fav_teacher = True
+        return render(request, 'teacher-detail.html',{
+            'teacher':teacher,
+            'all_courses':all_courses,
+            'all_teachers': all_teachers,
+            'has_fav_org': has_fav_org,
+            'has_fav_teacher': has_fav_teacher,
+        })
