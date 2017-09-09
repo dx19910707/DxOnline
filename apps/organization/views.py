@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 
-from .models import CityDict,CourseOrg
+from .models import CityDict,CourseOrg, Teacher
 from .forms import UserAskForm
 from courses.models import Course
 from operation.models import UserFavorite
@@ -33,9 +33,9 @@ class OrgListView(View):
         sort = request.GET.get('sort', '')
         if sort:
             if sort == 'students':
-                all_orgs = all_orgs.order_by('students')
+                all_orgs = all_orgs.order_by('-students')
             elif sort == 'course_nums':
-                all_orgs = all_orgs.order_by('course_nums')
+                all_orgs = all_orgs.order_by('-course_nums')
 
         org_nums = all_orgs.count()
 
@@ -165,3 +165,30 @@ class AddFavView(View):
                 return HttpResponse(json.dumps({'status': 'success', 'msg': '已收藏'}), content_type='application/json')
             else:
                 return HttpResponse(json.dumps({'status': 'fail', 'msg': '收藏出错'}), content_type='application/json')
+
+
+class TeacherListView(View):
+    #课程讲师列表页
+    def get(self, request):
+        all_teachers = Teacher.objects.all()
+
+        sort = request.GET.get('sort', '')
+        if sort:
+            if sort == 'hot':
+                all_teachers = all_teachers.order_by('-click_nums')
+
+        sorted_teachers = Teacher.objects.all().order_by('-click_nums')[:3]
+
+        #对讲师进行分页
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+        p = Paginator(all_teachers, 2, request=request)
+        teachers = p.page(page)
+
+        return render(request, 'teachers-list.html', {
+            'all_teachers':teachers,
+            'sorted_teachers': sorted_teachers,
+            'sort': sort,
+        })
