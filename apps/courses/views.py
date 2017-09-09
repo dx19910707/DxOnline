@@ -1,9 +1,12 @@
+import json
+
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic.base import View
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 
-from operation.models import UserFavorite
+from operation.models import UserFavorite, CourseComments, UserCourse
 from .models import Course, CourseResource
 
 # Create your views here.
@@ -80,7 +83,43 @@ class CourseVideoView(View):
     def get(self, request, course_id):
         course = Course.objects.get(id=int(course_id))
         all_resources = CourseResource.objects.filter(course=course)
+        # all_usecourses = UserCourse.objects.filter(user=)
         return render(request, 'course-video.html',{
             'course':course,
             'all_resources': all_resources,
         })
+
+
+class CourseCommentView(View):
+    def get(self, request, course_id):
+        course = Course.objects.get(id=int(course_id))
+        all_resources = CourseResource.objects.filter(course=course)
+        all_comments = CourseComments.objects.all()
+        return render(request, 'course-comment.html', {
+            'course': course,
+            'all_resources': all_resources,
+            'all_comments': all_comments,
+        })
+
+
+class AddcommentView(View):
+    #用户添加课程评论
+    def post(self, request):
+        if not request.user.is_authenticated():
+            # 判断用户的登录状态
+            return HttpResponse(json.dumps({'status': 'fail', 'msg': '用户未登录'}), content_type='application/json')
+
+        course_id = request.POST.get('course_id',0)
+        comments = request.POST.get('comments','')
+        if int(course_id) > 0 and comments:
+            course_comments = CourseComments()
+            course = Course.objects.get(id=int(course_id))
+            course_comments.course = course
+            course_comments.comments = comments
+            course_comments.user = request.user
+            course_comments.save()
+            return HttpResponse(json.dumps({'status': 'success', 'msg': '评论成功'}), content_type='application/json')
+        else:
+            return HttpResponse(json.dumps({'status': 'fail', 'msg': '评论失败'}), content_type='application/json')
+
+

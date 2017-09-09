@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.views.generic.base import View
 from django.shortcuts import render_to_response
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
-from django.http import  HttpResponse
+from django.http import HttpResponse
 
 from .models import CityDict,CourseOrg
 from .forms import UserAskForm
