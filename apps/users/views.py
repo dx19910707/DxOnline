@@ -12,7 +12,9 @@ from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm, UploadIma
 from .models import UserProfile, EmailVerifyRecord
 from utils.email_send import send_register_email
 from utils.mixin_utils import LoginRequiredMixin
-from operation.models import UserCourse
+from operation.models import UserCourse, UserFavorite
+from organization.models import CourseOrg, Teacher
+from courses.models import Course
 
 
 class CustomBackend(ModelBackend):
@@ -206,5 +208,43 @@ class MyCourseView(LoginRequiredMixin, View):
         })
 
 
+class MyFavOrgView(LoginRequiredMixin, View):
+    #我的收藏-机构
+    def get(self, request):
+        org_list = []
+        myfav_orgs = UserFavorite.objects.filter(user=request.user, fav_type=2)
+        for myfav_org in myfav_orgs:
+            org_id = myfav_org.fav_id
+            org = CourseOrg.objects.get(id=org_id)
+            org_list.append(org)
+        return render(request, 'usercenter-fav-org.html', {
+            'org_list':org_list
+        })
 
 
+class MyFavTeacherView(LoginRequiredMixin, View):
+    #我的收藏-教师
+    def get(self, request):
+        teacher_list = []
+        myfav_teachers = UserFavorite.objects.filter(user=request.user, fav_type=3)
+        for myfav_teacher in myfav_teachers:
+            teacher_id = myfav_teacher.fav_id
+            teacher = Teacher.objects.get(id=teacher_id)
+            teacher_list.append(teacher)
+        return render(request, 'usercenter-fav-teacher.html', {
+            'teacher_list':teacher_list,
+        })
+
+
+class MyFavCourseView(LoginRequiredMixin, View):
+    #我的收藏-教师
+    def get(self, request):
+        course_list = []
+        myfav_courses = UserFavorite.objects.filter(user=request.user, fav_type=1)
+        for myfav_course in myfav_courses:
+            course_id = myfav_course.fav_id
+            course = Course.objects.get(id=course_id)
+            course_list.append(course)
+        return render(request, 'usercenter-fav-course.html', {
+            'course_list':course_list,
+        })
