@@ -118,6 +118,9 @@ class CourseVideoView(LoginRequiredMixin, View):
     '''
     def get(self, request, course_id):
         course = Course.objects.get(id=int(course_id))
+        #课程学习人数加1
+        course.students += 1
+        course.save()
         #查询用户是否已经关联/学习了该课程
         user_courses = UserCourse.objects.filter(user=request.user, course=course)
         if not user_courses:
@@ -131,8 +134,9 @@ class CourseVideoView(LoginRequiredMixin, View):
         all_user_courses = UserCourse.objects.filter(user_id__in=user_ids)
         #获取这些课程的ID
         course_ids = [user_course.course.id for user_course in all_user_courses]
-        #获取这些课程中点击量最高的5个
-        relate_courses = Course.objects.filter(id__in=course_ids).order_by('-click_nums')[:5]
+        #获取这些课程中点击量最高的3个
+        relate_courses = Course.objects.filter(id__in=course_ids).order_by('-click_nums')[:3]
+        #课程资源
         all_resources = CourseResource.objects.filter(course=course)
         return render(request, 'course-video.html',{
             'course':course,
@@ -144,12 +148,23 @@ class CourseVideoView(LoginRequiredMixin, View):
 class CourseCommentView(LoginRequiredMixin, View):
     def get(self, request, course_id):
         course = Course.objects.get(id=int(course_id))
-        all_resources = CourseResource.objects.filter(course=course)
         all_comments = CourseComments.objects.all()
+        # 获取学习了该门课程的所有用户的ID
+        user_courses = UserCourse.objects.filter(course=course)
+        user_ids = [user_course.user.id for user_course in user_courses]
+        # 获取这些用户还学习了哪些课程
+        all_user_courses = UserCourse.objects.filter(user_id__in=user_ids)
+        # 获取这些课程的ID
+        course_ids = [user_course.course.id for user_course in all_user_courses]
+        # 获取这些课程中点击量最高的3个
+        relate_courses = Course.objects.filter(id__in=course_ids).order_by('-click_nums')[:3]
+        # 课程资源
+        all_resources = CourseResource.objects.filter(course=course)
         return render(request, 'course-comment.html', {
             'course': course,
-            'all_resources': all_resources,
             'all_comments': all_comments,
+            'all_resources': all_resources,
+            'relate_courses': relate_courses,
         })
 
 

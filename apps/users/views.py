@@ -1,9 +1,9 @@
 import json
 
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
 from django.views.generic.base import View
@@ -26,6 +26,14 @@ class CustomBackend(ModelBackend):
                 return user
         except Exception as e:
             return None
+
+
+class LogOutView(View):
+    #用户登出
+    def get(self, request):
+        logout(request)
+        from django.core.urlresolvers import reverse
+        return HttpResponseRedirect(reverse("index"))
 
 
 class LoginView(View):
@@ -262,6 +270,12 @@ class MyMessageView(LoginRequiredMixin, View):
     def get(self, request):
         all_messages = UserMassage.objects.filter(user=request.user.id)
 
+        #用户进入个人消息后清空未读
+        all_unread_messages = UserMassage.objects.filter(user=request.user.id, has_read=False)
+        for unread_message in all_unread_messages:
+            unread_message.has_read = True
+            unread_message.save()
+
         #对消息进行分页
         try:
             page = request.GET.get('page', 1)
@@ -273,3 +287,5 @@ class MyMessageView(LoginRequiredMixin, View):
         return render(request, 'usercenter-message.html', {
             'messages':messages,
         })
+
+
