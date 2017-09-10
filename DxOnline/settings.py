@@ -25,9 +25,9 @@ sys.path.insert(0,os.path.join(BASE_DIR,'extra_apps'))
 SECRET_KEY = 'pgqb0%fu*f!vm4+*7b%0m0izg7vt%93=)z#o29(ik3&v74b_yw'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -151,3 +151,5 @@ EMAEL_FROM = 'dx19910707@sina.cn'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STATIC_ROOT = os.path.join(BASE_DIR,'static' )
