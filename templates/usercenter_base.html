@@ -23,27 +23,27 @@
 <section class="headerwrap headerwrap2">
     <header>
 		<div  class="header2 header">
- 			<div class="top">
-				<div class="wp">
-					<div class="fl"><p>服务电话：<b>33333333</b></p></div>
-					<!--登录后跳转-->
-
-
-                        <div class="personal">
+ 			{% if request.user.is_authenticated %}
+                <div class="top">
+                <div class="wp">
+                    <div class="fl">
+                        <p>服务电话：<b>123456789</b></p>
+                    </div>
+						<div class="personal">
                             <dl class="user fr">
-                                <dd>bobby<img class="down fr" src="../images/top_down.png"/></dd>
-                                <dt><img width="20" height="20" src="../media/image/2016/12/default_big_14.png"/></dt>
+                                <dd>{{ user.username }}<img class="down fr" src="/static/images/top_down.png"/></dd>
+                                <dt><img width="20" height="20" src="{{ MEDIA_URL }}{{ user.image }}"/></dt>
                             </dl>
                             <div class="userdetail">
                             	<dl>
-	                                <dt><img width="80" height="80" src="../media/image/2016/12/default_big_14.png"/></dt>
+	                                <dt><img width="80" height="80" src="{{ MEDIA_URL }}{{ user.image }}"/></dt>
 	                                <dd>
-	                                    <h2>django</h2>
-	                                    <p>bobby</p>
+	                                    <h2>{{ user.nickname }}</h2>
+	                                    <p>{{ user.username }}</p>
 	                                </dd>
                                 </dl>
                                 <div class="btn">
-	                                <a class="personcenter fl" href="usercenter-info.html">进入个人中心</a>
+	                                <a class="personcenter fl" href="{% url 'users:user_info' %}">进入个人中心</a>
 	                                <a class="fr" href="/logout/">退出</a>
                                 </div>
                             </div>
@@ -52,14 +52,24 @@
                             <div class="msg-num"><span id="MsgNum">0</span></div>
                         </a>
 
-
 				</div>
 			</div>
+                {% else %}
+                <div class="top">
+				<div class="wp">
+					<div class="fl">
+                        <p>服务电话：<b>123456789</b></p>
+                    </div>
+                    <a style="color:white" class="fr registerbtn" href="{% url 'register' %}">注册</a>
+                    <a style="color:white" class="fr loginbtn" href="{% url 'login' %}">登录</a>
+                </div>
+            </div>
+            {% endif %}
 
     <div class="middle">
         <div class="wp">
-            <a href="index.html"><img class="fl" src="../images/logo2.png"/></a>
-            <h1>我的慕学网</h1>
+            <a href="index.html"><img class="fl" src="{% static 'images/logo2.png' %}"/></a>
+            <h1>我的杜学网</h1>
         </div>
     </div>
 			</div>
@@ -212,8 +222,7 @@
                 <div class="button">
                     <input id="jsResetPwdBtn" type="button" value="提交" />
                 </div>
-                <input type='hidden' name='csrfmiddlewaretoken' value='DaP7IUKm9FA9nELA9YUlYYWpyIDdCiIP' />
-            <input type='hidden' name='csrfmiddlewaretoken' value='799Y6iPeEDNSGvrTu3noBrO4MBLv6enY' />
+           {% csrf_token %}
             </form>
         </div>
     </div>
