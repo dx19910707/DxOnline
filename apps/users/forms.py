@@ -1,3 +1,5 @@
+import re
+
 __author__ = 'duxi'
 __date__ = '2017-9-1 16:09'
 from django import forms
@@ -32,6 +34,20 @@ class UploadImageForm(forms.ModelForm):
         model = UserProfile
         fields = ['image']
 
+
+class UserInfoForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['nick_name','mobile','gender','birthday','address']
+    #验证手机号码是否正确（当不是必填项时不需要）
+    # def clean_mobile(self):
+    #     mobile = self.cleaned_data['mobile']
+    #     regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$"
+    #     p = re.compile(regex)
+    #     if p.match(mobile):
+    #         return mobile
+    #     else:
+    #         raise forms.ValidationError('手机号非法',code='mobile_invalid')
 
 
 
