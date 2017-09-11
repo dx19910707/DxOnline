@@ -11,7 +11,9 @@ class CourseAdmin(object):
     search_fields = ['name', 'course_org','desc', 'detail', 'degree', 'learn_times', 'students', 'fav_nums', 'image', 'click_nums']
     list_filter = ['name','course_org', 'desc', 'detail', 'degree', 'learn_times', 'students', 'fav_nums', 'image',
                    'click_nums', 'add_time']
-
+    ordering = ('-click_nums',)
+    readonly_fields = ['click_nums','students'] #只读
+    exclude = ['fav_nums'] #不在修改页面显示
 
 class LessonAdmin(object):
     list_display = ['course', 'name', 'add_time']

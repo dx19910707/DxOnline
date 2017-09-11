@@ -3,9 +3,6 @@ from xadmin import views
 
 from users.models import EmailVerifyRecord, Banner
 
-__author__ = 'duxi'
-__date__ = '2017-8-31 22:19'
-
 
 class BaseSetting(object):
     enable_themes = True
@@ -22,6 +19,7 @@ class EmailVerifyRecordAdmin(object):
     list_display = ['code','email','send_time','send_type']
     search_fields = ['code','email','send_type']
     list_filter = ['code','email','send_time','send_type']
+    model_icon = 'fa fa-envelope'
 
 
 class BannerAdmin(object):
