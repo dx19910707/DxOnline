@@ -27,7 +27,7 @@ class Course(models.Model):
     add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
 
     class Meta:
-        verbose_name = '课程'
+        verbose_name = '非轮播课程'
         verbose_name_plural = verbose_name
 
     def __str__(self):
@@ -44,6 +44,14 @@ class Course(models.Model):
     def get_course_lesson(self):
         #获取课程所有章节
         return self.lesson_set.all()
+
+
+class BannerCourse(Course):
+    class Meta:
+        verbose_name = '轮播课程'
+        verbose_name_plural = verbose_name
+        proxy = True
+
 
 class Lesson(models.Model):
     course = models.ForeignKey(Course, verbose_name='课程')
