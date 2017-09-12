@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'captcha',
     'pure_pagination',
     'DjangoUeditor',
+    'import_export',
 ]
 AUTH_USER_MODEL = "users.UserProfile"
 

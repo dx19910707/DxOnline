@@ -1,5 +1,6 @@
 import xadmin
 from .models import Course, Lesson, Video, CourseResource, BannerCourse
+from import_export import resources
 
 __author__ = 'duxi'
 __date__ = '2017-8-31 22:57'
@@ -14,8 +15,14 @@ class CourseResourseInline(object):
     model = CourseResource
     extra = 0
 
+class Coures_Resource(resources.ModelResource):
+    class Meta:
+        mode = Course
+        fields = ('id', 'name',)
+
 
 class CourseAdmin(object):
+    import_export_args = {'import_resource_class': Coures_Resource}
     list_display = ['name','course_org', 'desc', 'detail', 'degree', 'learn_times', 'students', 'fav_nums', 'image',
                     'click_nums', 'add_time', 'get_zj_nums']
     search_fields = ['name', 'course_org','desc', 'detail', 'degree', 'learn_times', 'students', 'fav_nums', 'image', 'click_nums']
@@ -28,6 +35,7 @@ class CourseAdmin(object):
     inlines = [LessonInline, CourseResourseInline]
     refresh_times = [3,5,10] #页面自动刷新时间
     style_fields = {"detail":"ueditor"}
+    import_excel = True
 
     def queryset(self):
         qs = super(CourseAdmin, self).queryset()
@@ -42,6 +50,8 @@ class CourseAdmin(object):
             course_org = obj.course_org
             course_org.course_nums = Course.objects.filter(course_org=course_org).all().count()
             course_org.save()
+
+
 
 
 class BannerCourseAdmin(object):
@@ -79,8 +89,10 @@ class CourseResourceAdmin(object):
     search_fields = ['course', 'name', 'download']
     list_filter = ['course', 'name', 'download', 'add_time']
 
+
 xadmin.site.register(Course, CourseAdmin)
 xadmin.site.register(BannerCourse, BannerCourseAdmin)
 xadmin.site.register(Lesson, LessonAdmin)
 xadmin.site.register(Video, VideoAdmin)
 xadmin.site.register(CourseResource, CourseResourceAdmin)
+
