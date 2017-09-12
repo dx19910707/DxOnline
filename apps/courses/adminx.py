@@ -27,6 +27,7 @@ class CourseAdmin(object):
     exclude = ['fav_nums'] #不在修改页面显示
     inlines = [LessonInline, CourseResourseInline]
     refresh_times = [3,5,10] #页面自动刷新时间
+    style_fields = {"detail":"ueditor"}
 
     def queryset(self):
         qs = super(CourseAdmin, self).queryset()

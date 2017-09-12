@@ -47,6 +47,8 @@ urlpatterns = [
     # url(r'^static/(?P<path>.*)$', serve,{"document_root":STATIC_ROOT}),
 
     url(r'^users/', include('users.urls', namespace='users')),
+    #富文本相关URL
+    url(r'^ueditor/',include('DjangoUeditor.urls' )),
 ]
 
 handler404 = 'users.views.page_404'
