@@ -36,6 +36,7 @@ class Course(models.Model):
     def get_zj_nums(self):
         #获取课程章节数
         return self.lesson_set.all().count()
+    get_zj_nums.short_description = '章节数'
 
     def get_learn_users(self):
         #获取学习本门课程的用户
@@ -68,6 +69,10 @@ class Lesson(models.Model):
     def get_lesson_videos(self):
         #获取该章节下的所有视频
         return self.video_set.all()
+
+    def get_lesson_videos_nums(self):
+        return self.video_set.all().count()
+    get_lesson_videos_nums.short_description = '视频数'
 
 
 class Video(models.Model):

@@ -17,29 +17,41 @@ class CourseResourseInline(object):
 
 class CourseAdmin(object):
     list_display = ['name','course_org', 'desc', 'detail', 'degree', 'learn_times', 'students', 'fav_nums', 'image',
-                    'click_nums', 'add_time']
+                    'click_nums', 'add_time', 'get_zj_nums']
     search_fields = ['name', 'course_org','desc', 'detail', 'degree', 'learn_times', 'students', 'fav_nums', 'image', 'click_nums']
     list_filter = ['name','course_org', 'desc', 'detail', 'degree', 'learn_times', 'students', 'fav_nums', 'image',
                    'click_nums', 'add_time']
     ordering = ('-click_nums',)
     readonly_fields = ['click_nums','students'] #只读
+    list_editable = ['degree'] #可直接在xadmin桌面修改
     exclude = ['fav_nums'] #不在修改页面显示
     inlines = [LessonInline, CourseResourseInline]
+    refresh_times = [3,5,10] #页面自动刷新时间
 
     def queryset(self):
         qs = super(CourseAdmin, self).queryset()
         qs = qs.filter(is_banner=False)
         return qs
 
+    def save_models(self):
+        #在保存课程的时候统计课程机构的课程数
+        obj = self.new_obj
+        obj.save()
+        if obj.course_org is not None:
+            course_org = obj.course_org
+            course_org.course_nums = Course.objects.filter(course_org=course_org).all().count()
+            course_org.save()
+
 
 class BannerCourseAdmin(object):
     list_display = ['name','course_org', 'desc', 'detail', 'degree', 'learn_times', 'students', 'fav_nums', 'image',
-                    'click_nums', 'add_time']
+                    'click_nums', 'add_time', 'get_zj_nums']
     search_fields = ['name', 'course_org','desc', 'detail', 'degree', 'learn_times', 'students', 'fav_nums', 'image', 'click_nums']
     list_filter = ['name','course_org', 'desc', 'detail', 'degree', 'learn_times', 'students', 'fav_nums', 'image',
                    'click_nums', 'add_time']
     ordering = ('-click_nums',)
     readonly_fields = ['click_nums','students'] #只读
+    list_editable = ['degree']#可直接在xadmin桌面修改
     exclude = ['fav_nums'] #不在修改页面显示
     inlines = [LessonInline, CourseResourseInline]
 
@@ -50,7 +62,7 @@ class BannerCourseAdmin(object):
 
 
 class LessonAdmin(object):
-    list_display = ['course', 'name', 'add_time']
+    list_display = ['course', 'name', 'add_time', 'get_lesson_videos_nums']
     search_fields = ['course', 'name']
     list_filter = ['course__name', 'name', 'add_time']
 
