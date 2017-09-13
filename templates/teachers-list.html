@@ -65,7 +65,7 @@
                 {% endif %}
                     {% for page in all_teachers.pages %}
                         {% if page %}
-                            {% ifequal page page_obj.number %}
+                            {% ifequal page all_teachers.number %}
                                 <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
                             {% else %}
                                 <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
