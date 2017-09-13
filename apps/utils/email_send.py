@@ -9,7 +9,6 @@ __author__ = 'duxi'
 __date__ = '2017-9-1 20:06'
 
 
-
 def generate_random_str(randomlength=8):
     str = ''
     chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -51,5 +50,3 @@ def send_register_email(email, send_type='register'):
         send_status = send_mail(email_title, email_body, EMAEL_FROM, [email])
         if send_status:
             pass
-
-

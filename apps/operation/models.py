@@ -4,6 +4,8 @@ from django.db import models
 
 from users.models import UserProfile
 from courses.models import Course
+
+
 # Create your models here.
 
 
@@ -32,8 +34,8 @@ class CourseComments(models.Model):
 
 class UserFavorite(models.Model):
     user = models.ForeignKey(UserProfile, verbose_name='用户')
-    fav_id = models.IntegerField(default=0, verbose_name='数据ID')#即收藏的课程/教师/机构的id
-    fav_type = models.IntegerField(choices=((1,'课程'),(2,'机构'),(3,'讲师')), verbose_name='收藏类型', default=1)
+    fav_id = models.IntegerField(default=0, verbose_name='数据ID')  # 即收藏的课程/教师/机构的id
+    fav_type = models.IntegerField(choices=((1, '课程'), (2, '机构'), (3, '讲师')), verbose_name='收藏类型', default=1)
 
     class Meta:
         verbose_name = '用户收藏'
@@ -41,7 +43,7 @@ class UserFavorite(models.Model):
 
 
 class UserMassage(models.Model):
-    user = models.IntegerField(default=0, verbose_name='接收用户')   #不用外键，因为发送的消息有可能直接发给全员
+    user = models.IntegerField(default=0, verbose_name='接收用户')  # 不用外键，因为发送的消息有可能直接发给全员
     message = models.CharField(max_length=500, verbose_name='消息内容')
     has_read = models.BooleanField(default=0, verbose_name='是否已读')
     add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')

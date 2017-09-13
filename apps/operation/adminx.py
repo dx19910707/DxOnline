@@ -35,12 +35,6 @@ class UserFavoriteAdmin(object):
     list_filter = ['user__username', 'fav_id', 'fav_type']
 
 
-
-
-
-
-
-
 xadmin.site.register(UserAsk, UserAskAdmin)
 xadmin.site.register(CourseComments, CourseCommentsAdmin)
 xadmin.site.register(UserFavorite, UserFavoriteAdmin)
